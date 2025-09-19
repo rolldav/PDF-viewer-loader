@@ -1,0 +1,20 @@
+// ==UserScript==
+// @name         PDF Viewer Loader
+// @namespace    rolldav.loader
+// @version      1.0.0
+// @description  Always load latest viewer from Gist at runtime; no local cache.
+// @match        *://*/*
+// @run-at       document-start
+// @grant        none
+// @noframes
+// ==/UserScript==
+
+(function () {
+  var RAW = 'https://gist.github.com/rolldav/53e26a22d7628e0e5a0363b0e6e549a6/raw/pdf-viewer.user.js';
+  try {
+    fetch(RAW + '?t=' + Date.now(), { cache: 'no-store', mode: 'cors' })
+      .then(function(r){ return r.text(); })
+      .then(function(code){ Function(code)(); })
+      .catch(function(e){ console.error('Loader fetch failed', e); });
+  } catch (e) { console.error('Loader init failed', e); }
+})();
